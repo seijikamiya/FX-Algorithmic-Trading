@@ -54,13 +54,12 @@ def get_orderbook_data(client, instrument, dt):
 
     return df_orderbook_final
 
-
-dt = datetime.datetime(2022, 11, 5, 13, 0)
-end_date = datetime.datetime(2022, 11, 5, 15, 0)
+dt = datetime.datetime(2022, 11, 3, 0, 0)
+end_date = datetime.datetime(2022, 11, 4, 0, 0)
 df_orderbook = get_orderbook_data(client, instrument, dt).reset_index(drop=True).rename(dt)
 
 while (dt <= end_date):
     dt += datetime.timedelta(minutes=10)
     df_orderbook = pd.concat([df_orderbook, get_orderbook_data(client, instrument, dt).reset_index(drop=True).rename(dt)], axis=1)
 
-# df_orderbook.T.to_csv('./USD_JPY_202211-202212_M10_add_parameter_add_openposition.csv')
+df_orderbook.T.to_csv('./data/USD_JPY_202211-202212_M10_openposition.csv')

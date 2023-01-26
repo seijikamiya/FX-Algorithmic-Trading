@@ -24,7 +24,7 @@ api = API(access_token=access_token, environment="live")
 
 all_data = []
 year_months =[
-    [2019, 6], [2019, 7],
+    [2022, 11], [2022, 12],
     ]
 # year, monthでループ
 for year, month in year_months:
@@ -40,3 +40,5 @@ for year, month in year_months:
 df = pd.DataFrame(all_data)
 df.columns = ['Datetime', 'Volume', 'Open', 'High', 'Low', 'Close']
 df = df.set_index('Datetime')
+
+df.to_csv('./data/USD_JPY_202211-202212_M10.csv')

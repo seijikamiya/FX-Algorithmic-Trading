@@ -44,3 +44,5 @@ for ave in move_ave_setting:
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%y-%m-%d"))
     plt.savefig(f'figure_{ave}.png')
     plt.clf()
+
+df.to_csv('./USD_JPY_202211-202212_M10_add_parameter.csv')
