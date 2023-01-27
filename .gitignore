@@ -2,3 +2,5 @@ config.ini
 venv/*
 data/*
 image/*
+memo.txt
+*.log
