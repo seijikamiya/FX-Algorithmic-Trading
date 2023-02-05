@@ -45,6 +45,10 @@ def createDiffCloseClassifyer(df):
     
     return df
 
+def convert_from_csv_to_pkl(csv_file_name):
+    df = pd.read_csv(csv_file_name)
+    df.to_pickle(csv_file_name[:-3]+ 'pkl')
+
 # df = pd.read_csv('./USD_JPY_202211-202212_M10.csv', index_col='Datetime')
 
 # df = createDiffCloseClassifyer(df)
@@ -64,3 +68,7 @@ def createDiffCloseClassifyer(df):
 # plt.clf()
 
 # print('+:'+ str(len(df[df['class']==1]))+ ' 0:' + str(len(df[df['class']==0]))+ ' -:' + str(len(df[df['class']==-1])))
+
+if __name__ == "__main__":
+    convert_from_csv_to_pkl("./data/USD_JPY_open_order.csv")
+    convert_from_csv_to_pkl("./data/USD_JPY_open_position.csv")
