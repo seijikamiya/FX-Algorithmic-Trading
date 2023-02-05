@@ -5,6 +5,7 @@ import pytz
 import configparser
 import pandas as pd
 import logging
+import time
 
 formatter = '%(asctime)s:%(message)s'
 logging.basicConfig(filename='test.log', level=logging.INFO, format=formatter)
@@ -66,8 +67,9 @@ def get_orderbook_data(client, instrument, dt):
 
     df_orderbook_final = pd.concat([df_sort_long['price'].head(10), df_sort_long['longCountPercent'].head(10), 
                                     df_sort_short['price'].head(10), df_sort_short['longCountPercent'].head(10)], axis=0)
-
+    
     return df_orderbook_final
+
 
 def get_openposition_data(client, instrument, dt):
     
@@ -104,15 +106,30 @@ def get_openposition_data(client, instrument, dt):
 
     return df_orderbook_final
 
-dt = datetime.datetime(2022, 12, 1, 0, 0)
-end_date = datetime.datetime(2022, 12, 1, 12, 0)
-df_openorder = get_orderbook_data(client, instrument, dt).reset_index(drop=True).rename(dt)
-df_openposition = get_openposition_data(client, instrument, dt).reset_index(drop=True).rename(dt)
+if __name__ == '__main__':
 
-while (dt <= end_date):
-    dt += datetime.timedelta(minutes=10)
-    df_openorder = pd.concat([df_openorder, get_orderbook_data(client, instrument, dt).reset_index(drop=True).rename(dt)], axis=1)
-    df_openposition = pd.concat([df_openposition, get_openposition_data(client, instrument, dt).reset_index(drop=True).rename(dt)], axis=1)
+    dt = datetime.datetime(2022, 9, 1, 0, 0)
+    end_date = datetime.datetime(2023, 1, 29, 0, 0)
+    df_openorder = get_orderbook_data(client, instrument, dt).reset_index(drop=True).rename(dt)
+    df_openposition = get_openposition_data(client, instrument, dt).reset_index(drop=True).rename(dt)
 
-df_openorder.T.to_csv('./data/USD_JPY_open_order.csv')
-df_openposition.T.to_csv('./data/USD_JPY_open_position.csv')
+    while (dt <= end_date):
+        time.sleep(0.1)
+        dt += datetime.timedelta(minutes=5)
+        try:
+            df_openorder = pd.concat([df_openorder, get_orderbook_data(client, instrument, dt).reset_index(drop=True).rename(dt)], axis=1)
+            df_openposition = pd.concat([df_openposition, get_openposition_data(client, instrument, dt).reset_index(drop=True).rename(dt)], axis=1)
+
+        except TypeError as e:
+            print('catch TypeError:', e)
+            logger.info('catch TypeError: {} '.format(e))
+        except ValueError as e:
+            print('catch ValueError:', e)
+            logger.info('catch ValueError: {} '.format(e))
+        except:
+            logger.warning('catch Error')
+
+
+ 
+    df_openorder.T.to_csv('./data/USD_JPY_open_order.csv')
+    df_openposition.T.to_csv('./data/USD_JPY_open_position.csv')
